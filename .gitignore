@@ -9,3 +9,6 @@ __pycache__/
 
 # Ignore everything in raw_data_sorted
 raw_data_sorted/
+
+*.slxc
+*sldrprj

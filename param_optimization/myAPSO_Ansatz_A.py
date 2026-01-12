@@ -40,11 +40,11 @@ def main():
 
     #--------Speicherort der Simulink-Modelle-----------
     eng = matlab.engine.start_matlab()
-    path = r"./"   # Pfad für xAchse_Sim_GR_GA_17V.slx
+    path = r"./matlab_path"   # Pfad für xAchse_Sim_GR_GA_17V.slx
     eng.addpath(path, nargout=0)
 
     #-----Problem Variables-----
-    n_gen = 50      # Anzahl der Generationen
+    n_gen = 1      # Anzahl der Generationen
     n_pop = 50      # Populationsgröße
 
     #------Durchführe der Optimierung und Speichern in csv-Datei---------
