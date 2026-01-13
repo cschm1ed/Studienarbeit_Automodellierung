@@ -10,8 +10,11 @@ __pycache__/
 # Ignore everything in raw_data_sorted
 raw_data_sorted/
 
+# Ignore Matlab caches
 *.slxc
 *sldrprj
 *simulink_cache.xml
 *checksumOfCache.mat
+
+# Ignore large log file
 *myLog
