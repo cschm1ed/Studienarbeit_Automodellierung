@@ -3,6 +3,8 @@ from pymoo.algorithms.soo.nonconvex.pso import PSO
 from pymoo.optimize import minimize
 import numpy as np
 from pymoo.core.problem import Problem
+from pymoo.core.callback import Callback
+
 import csv
 import matlab.engine
 
@@ -68,3 +70,19 @@ class MyProblem(Problem):
                 xSimS_fitness[i] = 1e12  # Penalty value
 
         out["F"] = xSimS_fitness
+
+## notify Wird während der optimierung nach jeder Generation aufgerufen
+class ProgressCallback(Callback):
+    def __init__(self, current_iteration, total_iterations, total_gens, case):
+        super().__init__()
+        self.curretn_iteration = current_iteration
+        self.total_iterations = total_iterations
+        self.total_gens = total_gens
+        self.case = case
+
+    def notify(self, algorithm):
+        # algorithm.n_gen returns the number of generations completed so far
+        print("---------------------------------------")
+        print(f"GENERATION: {algorithm.n_gen}/{self.total_gens}; ITERATION: {self.curretn_iteration}/{self.total_iterations}, CASE: {self.case}")
+        print("---------------------------------------")
+

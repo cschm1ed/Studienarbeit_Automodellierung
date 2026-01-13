@@ -44,7 +44,7 @@ def main():
     eng.addpath(path, nargout=0)
 
     #-----Problem Variables-----
-    n_gen = 1      # Anzahl der Generationen
+    n_gen = 50      # Anzahl der Generationen
     n_pop = 50      # Populationsgröße
 
     #------Durchführe der Optimierung und Speichern in csv-Datei---------
@@ -86,25 +86,25 @@ def main():
     # Berechnung der Massen
 
     new_estimates = {
-        "Staender-Daempfung"     : 100000,      ## [N/(m*s)]
-        "Staender-Steifigkeit"   : 1500000000,  ## [N/m]
-        "Staender-Masse"         : 1000,        ## [kg]
-        "Spindel-Daempfung"      : 100000,      ## [N/(m*s)]
-        "Spindel-Steifigkeit"    : 100000000,   ## [N/m]
-        "Spindelgehaeuse-Masse"  : df_apso_DimRed['Variable1'].loc['mean'].copy(),     ## [kg]
-        "Spindel-Masse"          : 250,         ## [kg]
-        "KGT-Daempfung"          : 100000,      ## [N/(m*s)]
-        "KGT-Steifigkeit"        : 200000000,   ## [N/m]
+        "Staender-Daempfung"     : params_best_estimate["Staender-Daempfung"],      ## [N/(m*s)]
+        "Staender-Steifigkeit"   : params_best_estimate["Staender-Steifigkeit"],  ## [N/m]
+        "Staender-Masse"         : params_best_estimate["Staender-Masse"],        ## [kg]
+        "Spindel-Daempfung"      : params_best_estimate["Spindel-Daempfung"],      ## [N/(m*s)]
+        "Spindel-Steifigkeit"    : params_best_estimate["Spindel-Steifigkeit"],   ## [N/m]
+        "Spindelgehaeuse-Masse"  : params_best_estimate["Spindelgehaeuse-Masse"],     ## [kg]
+        "Spindel-Masse"          : params_best_estimate["Spindel-Masse"],         ## [kg]
+        "KGT-Daempfung"          : params_best_estimate["KGT-Daempfung"],      ## [N/(m*s)]
+        "KGT-Steifigkeit"        : params_best_estimate["KGT-Steifigkeit"],   ## [N/m]
         "KGT-Trägheitsmoment"    : df_apso_DimRed['Variable2'].loc['mean'].copy(),     ## [kg*m²]
         "Reibung-viskos"         : df_apso_DimRed['Variable3'].loc['mean'].copy(),     ## [N*m/(rad*s)]
-        "Riemen-Daempfung"       : 1,           ## [N*m/rad]
-        "Riemen-Steifigkeit"     : 200000,      ## [N*m/rad]
+        "Riemen-Daempfung"       : params_best_estimate["Riemen-Daempfung"],           ## [N*m/rad]
+        "Riemen-Steifigkeit"     : params_best_estimate["Riemen-Steifigkeit"],      ## [N*m/rad]
         "Getriebe-Wirkungsgrad"  : df_apso_DimRed['Variable4'].loc['mean'].copy(),     ## [-]
         "Getriebe-Uebersetzung"  : df_apso_DimRed['Variable5'].loc['mean'].copy(),     ## [-]
         "Leitspundel-Steigung"   : df_apso_DimRed['Variable6'].loc['mean'].copy(),     ## [m]
         "Motor-Trägheitsmoment"  : df_apso_DimRed['Variable7'].loc['mean'].copy()      ## [kg*m²]
     }
-    new_estimates_optimized_names = ["Spindelgehaeuse-Masse", "KGT-Trägheitsmoment", "Reibung-viskos",
+    new_estimates_optimized_names = ["KGT-Trägheitsmoment", "Reibung-viskos",
                                      "Getriebe-Wirkungsgrad", "Getriebe-Uebersetzung", "Leitspindel-Steigung",
                                      "Motor-Trägheitsmoment"]
     x_lower_bounds = []
@@ -145,12 +145,17 @@ def new_referenceDrive(case, x_l, x_u, eng, n_gen, n_pop, x_ref_array):
         while i < ITERATIONS:
             problem_set_static_values(case, eng, n_pop, x_ref_array, x_l, x_u)
             problem = MyProblem()
+            my_callback = ProgressCallback(current_iteration=i + 1,  ### Gibt status nach jeder generation aus
+                                           total_iterations=ITERATIONS,
+                                           total_gens=n_gen,
+                                           case=case)
             res = minimize(problem=problem,
                            algorithm=PSO(pop_size=n_pop, adaptive=True),
                            termination=("n_gen", n_gen),
                            eliminate_duplicates=True,
                            verbose=True,
-                           save_history=False)
+                           save_history=False,
+                           callback=my_callback)
             print('res: ', res)
             print("Best solution found: \nX = %s\nF = %s" % (res.X, res.F))
             print("Time:", res.exec_time)

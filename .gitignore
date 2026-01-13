@@ -12,3 +12,6 @@ raw_data_sorted/
 
 *.slxc
 *sldrprj
+*simulink_cache.xml
+*checksumOfCache.mat
+*myLog
