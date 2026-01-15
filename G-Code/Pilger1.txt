@@ -1,23 +1,21 @@
 
 ; Pilgrim_1
 ; Anfahren X200
-N80 G90     	 			#Wechsel zu absoluter Programmierung
-N85 G55					# ist ein G-Code, der oft für die Auswahl eines Werkzeuglängenoffsets verwendet wird.
-N90 G01 X800 F5000  	#Vorschubgeschwindigkeit 5000 mm/min
-N95 G04 P10
+; N80 G90     	 			#Wechsel zu absoluter Programmierung
+; N85 G55					# ist ein G-Code, der oft für die Auswahl eines Werkzeuglängenoffsets verwendet wird.
+; N95 G04 P10
 
 
 ; Pilgrim_1
-M08
-N100 G01 X850 F5000		# G01 für Linearinterpolation
-;N110 G04 P10 				# G04 als Dwell oder Pause 10 sekunden oder millisekunden?
-
-N120 G01 X900 F5000
-N130 G01 X850 F5000
-N140 G01 X950 F5000
-N150 G01 X900 F5000
-N160 G01 X1000 F5000
-N170 G01 X950 F5000
 M09
+G01 X800 F5000  	#Vorschubgeschwindigkeit 5000 mm/min
+G01 X850 F5000		# G01 für Linearinterpolation
+; N110 G04 P10 				# G04 als Dwell oder Pause 10 sekunden oder millisekunden?
 
-N180 G04 P10
+G01 X900 F5000
+G01 X850 F5000
+G01 X950 F5000
+G01 X900 F5000
+G01 X1000 F5000
+G01 X950 F5000
+M08
