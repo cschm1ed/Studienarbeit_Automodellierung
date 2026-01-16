@@ -54,8 +54,8 @@ def create_plot_file(ordner, txt_name_getriebe, txt_name_motor, txt_time, verzei
         y_min_curr = 0
         y_max_curr = 1500
         print('\t--- Fehler.')
-    x_min = -2
-    x_max = 120
+    x_min = -20
+    x_max = 20
     y_min_pos = -500
     y_max_pos = 500
     # Diagramm für Positionsverlauf erstellen
