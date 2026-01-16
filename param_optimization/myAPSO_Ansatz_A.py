@@ -11,7 +11,10 @@ import numpy as np
 from myAPSO_Ansatz_A_Problem import *
 import pandas as pd
 
-ITERATIONS = 1
+N_GEN = 50      #|
+N_POP = 50      #|
+ITERATIONS = 1  # -> Parameter für APSO
+LOGGING = False # Wenn True LOGGING = True wird die historie aller Parameter in einer csv gespeichert
 
 ## Reihenfolge in dictionary ist relevant damit c1 - c17 iteriert werden kann
 params_best_estimate = {
@@ -44,8 +47,8 @@ def main():
     eng.addpath(path, nargout=0)
 
     #-----Problem Variables-----
-    n_gen = 50      # Anzahl der Generationen
-    n_pop = 50      # Populationsgröße
+    n_gen = N_GEN      # Anzahl der Generationen
+    n_pop = N_POP      # Populationsgröße
 
     #------Durchführe der Optimierung und Speichern in csv-Datei---------
     #eng.eval("myCluster = parcluster('local');", nargout=0)
@@ -68,7 +71,7 @@ def main():
                     params_best_estimate["Leitspundel-Steigung"],
                     params_best_estimate["Motor-Trägheitsmoment"]
                     ]
-    x_lower_bounds = np.multiply(params_dim_red, 1 - deviation) #-5% Abweichung
+    x_lower_bounds = np.multiply(params_dim_red, 1 - deviation) #-5% Abweichungin csv-D
     x_upper_bounds = np.multiply(params_dim_red, 1 + deviation) #+5% Abweichung
     if x_upper_bounds[3] > 1: ## 3 == index Wirkungsgrad
         x_upper_bounds[3] = 1
@@ -145,7 +148,7 @@ def new_referenceDrive(case, x_l, x_u, eng, n_gen, n_pop, x_ref_array):
         while i < ITERATIONS:
             problem_set_static_values(case, eng, n_pop, x_ref_array, x_l, x_u)
             problem = MyProblem()
-            my_callback = ProgressCallback(current_iteration=i + 1,  ### Gibt status nach jeder generation aus
+            my_callback = ProgressCallback(current_iteration=i + 1,  ### Gibt status nach jeder generation aus und macht logging möglich
                                            total_iterations=ITERATIONS,
                                            total_gens=n_gen,
                                            case=case)

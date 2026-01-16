@@ -4,7 +4,7 @@ from pymoo.optimize import minimize
 import numpy as np
 from pymoo.core.problem import Problem
 from pymoo.core.callback import Callback
-
+from myAPSO_Ansatz_A import LOGGING
 import csv
 import matlab.engine
 
@@ -75,7 +75,7 @@ class MyProblem(Problem):
 class ProgressCallback(Callback):
     def __init__(self, current_iteration, total_iterations, total_gens, case):
         super().__init__()
-        self.curretn_iteration = current_iteration
+        self.current_iteration = current_iteration
         self.total_iterations = total_iterations
         self.total_gens = total_gens
         self.case = case
@@ -83,6 +83,16 @@ class ProgressCallback(Callback):
     def notify(self, algorithm):
         # algorithm.n_gen returns the number of generations completed so far
         print("---------------------------------------")
-        print(f"GENERATION: {algorithm.n_gen}/{self.total_gens}; ITERATION: {self.curretn_iteration}/{self.total_iterations}, CASE: {self.case}")
+        print(f"GENERATION: {algorithm.n_gen}/{self.total_gens}; ITERATION: {self.current_iteration}/{self.total_iterations}, CASE: {self.case}")
         print("---------------------------------------")
+
+        if LOGGING:
+            current_x = algorithm.pop.get("X")
+            n_particles = current_x.shape[0]
+            gen_column = np.full((n_particles, 1), algorithm.n_gen)
+            data_to_save = np.hstack((current_x, gen_column))
+            with open(f"parameter_historie_fall_{self.case}.csv", "a", newline="") as f:
+                csvWriter = csv.writer(f, delimiter=',')
+                csvWriter.writerows(data_to_save)
+
 
