@@ -19,3 +19,6 @@ raw_data_sorted/
 
 # Ignore large log file
 *myLog
+
+## ignore large dataset
+**/*digital_output*/**

@@ -1,10 +1,14 @@
 import os
+import platform
 
 class Config:
 
     ##########
     # Lokaler Pfad:
-    BASE_PATH = r'C:\Users\proki\Desktop\Oktober25_DHBW\Neuer Ordner'
+    if platform.system() == "Windows":
+        BASE_PATH = r'C:\Users\proki\Desktop\Oktober25_DHBW\Neuer Ordner'
+    else:
+        BASE_PATH = rf'{os.environ["HOME"]}/Documents/Studienarbeit/Studienarbeit_Code'
     # Google Colab Pfad:
     #BASE_PATH = r'/content/drive/MyDrive/Colab/Masterarbeit_Schubert'
     ##########
