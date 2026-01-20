@@ -33,5 +33,5 @@ void loop(void) {
     Serial.println(current_mA);
   }
 
-  delay(10);
+  //delay(10);
 }
