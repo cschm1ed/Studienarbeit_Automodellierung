@@ -195,6 +195,5 @@ def create_x_sim_ref(case, eng, c):
     xSimRefArray = xSimRef.reshape(1, xSimRef.size)
     return xSimRefArray
 
-
 if __name__=='__main__':
     main()

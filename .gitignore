@@ -22,3 +22,4 @@ raw_data_sorted/
 
 ## ignore large dataset
 **/*digital_output*/**
+**/SammlungMessdaten/**
