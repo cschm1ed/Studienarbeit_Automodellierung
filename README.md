@@ -45,11 +45,3 @@ Nach der Installation können Sie das Projekt wie folgt ausführen:
 ## Lizenz
 
 wbk -Institut für Produktionstechnik
-
-## Kontakt
-
-Maximilian Schubert,
-Ittinghäuser Str. 36,
-70597 Stuttgart,
-maxi11696@googlemail.com,
-+49 151 15536430
