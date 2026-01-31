@@ -82,15 +82,8 @@ def daten_visualisieren():
 
 
 folders = [
-    r'./SammlungMessdaten/Sammlung_dekodiert/2026-01-15_18-04-31_Pilger1',
-    r'./SammlungMessdaten/Sammlung_dekodiert/2026-01-15_18-17-41_SpezSeg3',
-    r'./SammlungMessdaten/Sammlung_dekodiert/2026-01-15_18-24-16_SpezSeg3_2',
-    r'./SammlungMessdaten/Sammlung_dekodiert/2026-01-15_18-26-24_SpezSeg3Schneller',
-    r'./SammlungMessdaten/Sammlung_dekodiert/2026-01-15_18-28-26_SpezSeg3Schneller_2',
-    r'./SammlungMessdaten/Sammlung_dekodiert/2026-01-15_18-34-22_MyPilger1',
-    r'./SammlungMessdaten/Sammlung_dekodiert/2026-01-15_18-36-02_MyPilger1_2',
-    r'./SammlungMessdaten/Sammlung_dekodiert/2026-01-15_19-05-55_MyPilger5',
-    r'./SammlungMessdaten/Sammlung_dekodiert/2026-01-15_19-10-16_MyPilger1_F2500',
+    r'./SammlunghigherSamplingRatedekodiert/2026-01-20_19-30-34SpezSeg3_highSampling',
+    r'./SammlunghigherSamplingRatedekodiert/2026-01-20_19-33-13MyPilger5_highSampling',
 ]
 #------------------Datenverarbeitung--------------------
 
@@ -101,7 +94,6 @@ daten_eigenschaften()
 daten_vor_startpunkt_loeschen()
 filename_current = "currentAnfangAbgeschnitten.csv"
 filename_position = "positionAnfangAbgeschnitten.csv"
-daten_visualisieren()
 daten_eigenschaften()
 
 

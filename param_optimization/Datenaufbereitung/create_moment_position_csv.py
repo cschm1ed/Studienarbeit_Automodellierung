@@ -1,58 +1,36 @@
 import pandas as pd
-import matplotlib.pyplot as plt
+import os
 
-MOTORKONSTANTE = 0.08 # Nm / A
+## To do Motorstrom offset definieren
+
+MOTORKONSTANTE = 0.08  # Nm / A
 
 folders = [
-    r'./SammlungMessdaten/Sammlung_dekodiert/2026-01-15_18-04-31_Pilger1',
-    r'./SammlungMessdaten/Sammlung_dekodiert/2026-01-15_18-17-41_SpezSeg3',
-    r'./SammlungMessdaten/Sammlung_dekodiert/2026-01-15_18-24-16_SpezSeg3_2',
-    r'./SammlungMessdaten/Sammlung_dekodiert/2026-01-15_18-26-24_SpezSeg3Schneller',
-    r'./SammlungMessdaten/Sammlung_dekodiert/2026-01-15_18-28-26_SpezSeg3Schneller_2',
-    r'./SammlungMessdaten/Sammlung_dekodiert/2026-01-15_18-34-22_MyPilger1',
-    r'./SammlungMessdaten/Sammlung_dekodiert/2026-01-15_18-36-02_MyPilger1_2',
-    r'./SammlungMessdaten/Sammlung_dekodiert/2026-01-15_19-05-55_MyPilger5',
-    r'./SammlungMessdaten/Sammlung_dekodiert/2026-01-15_19-10-16_MyPilger1_F2500',
+    r'./SammlungMessdaten/SammlunghigherSamplingRatedekodiert/2026-01-20_19-30-34SpezSeg3_highSampling',
+    r'./SammlungMessdaten/SammlunghigherSamplingRatedekodiert/2026-01-20_19-33-13MyPilger5_highSampling'
 ]
 
 filename_current = "currentAnfangAbgeschnitten.csv"
 filename_position = "positionAnfangAbgeschnitten.csv"
 
 for folder in folders:
-    columns = ["position_[mm]", "torque_[nM]"]
-    current_df = pd.read_csv(folder + "/" + filename_current)
-    position_df = pd.read_csv(folder + "/" + filename_position)
+    path_curr = os.path.join(folder, filename_current)
+    path_pos = os.path.join(folder, filename_position)
 
-    i = 0
-    position_array = []
-    torque_array = []
-    time_position =
-    for index, column in current_df.iterrows():
-        torque = column["current_[mA]"] * MOTORKONSTANTE
-        while i < len(position_df["time_[s]"]) - 1 and position_df["time_[s]"].iloc[i] < column["time_[s]"] :
-            i += 1
+    current_df = pd.read_csv(path_curr)
+    position_df = pd.read_csv(path_pos)
+    current_df = current_df.sort_values("time_[s]")
+    position_df = position_df.sort_values("time_[s]")
 
-        position = position_df["position_[mm]"].iloc[i]
-        position_array.append(position)
-        torque_array.append(torque)
-    position_torque_df = pd.DataFrame({"time_torque_[s]": , "time_position_[s]": , "position_[mm]": position_array, "torque_[Nm]": torque_array})
+    merged_df = pd.merge_asof(
+        current_df,
+        position_df,
+        on="time_[s]",
+        direction="nearest",
+        suffixes=("", "_pos_original")
+    )
+    merged_df["torque_[Nm]"] = (merged_df["current_[mA]"] / 1000) * MOTORKONSTANTE
+    final_df = merged_df[["time_[s]", "position_[mm]", "torque_[Nm]"]]
 
-    fig, axs = plt.subplots(2, 1)
-
-    axs[0].plot(position_torque_df["position_[mm]"])
-    axs[0].set(ylabel="Position [mm]", xlabel="Abtastpunkte", title="Position", color="blue")
-    axs[0].grid(True)
-    axs[1].plot(position_torque_df["torque_[Nm]"])
-    axs[1].set(ylabel="Torque [mN]", xlabel="Abtastpunkte", title="Torque", color="orange")
-    axs[1].grid(True)
-
-    plt.savefig(folder + "/" + "torque_position" + ".png")
-
-
-
-
-
-
-
-
-
+    output_path = os.path.join(folder, "matched_position_torque.csv")
+    final_df.to_csv(output_path, index=False)
