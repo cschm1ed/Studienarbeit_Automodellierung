@@ -1,3 +1,5 @@
+import os.path
+from pathlib import Path
 
 import pandas as pd
 import numpy as np
@@ -8,8 +10,9 @@ def daten_eigenschaften():
                              "Abtastpunkte pro Sek Strom", "Abtastpunkte pro sek Position"]
     eigenschaften_rows = []
     for folder in folders:
-        position = pd.read_csv(folder + "/" + filename_position)
-        current = pd.read_csv(folder + "/" + filename_current)
+        folder = Path(folder)
+        position = pd.read_csv(folder / filename_position)
+        current = pd.read_csv(folder / filename_current)
 
         num_abtastpunkte_current = len(current)
         num_abtastpunkte_position = len(position)
@@ -20,7 +23,7 @@ def daten_eigenschaften():
         abtastpunkte_pro_sek_current = num_abtastpunkte_current / duration_current
         abtastpunkte_pro_sek_position = num_abtastpunkte_position / duration_position
 
-        eigenschaften_rows.append({"Fahrt": folder.split("/")[-1],
+        eigenschaften_rows.append({"Fahrt": folder.name,
                                    "Abtastpunkte Strom": num_abtastpunkte_current,
                                    "Abtastpunkte Position": num_abtastpunkte_position,
                                    "Dauer Strom": duration_current,
@@ -37,8 +40,9 @@ def daten_eigenschaften():
 def daten_vor_startpunkt_loeschen():
     global index
     for folder in folders:
-        position = pd.read_csv(folder + "/" + filename_position)
-        current = pd.read_csv(folder + "/" + filename_current)
+        folder = Path(folder)
+        position = pd.read_csv(folder / filename_position)
+        current = pd.read_csv(folder / filename_current)
 
         ## columns: 'time_[s]', 'current_[mA]' / 'position_[mm]'
 
@@ -60,30 +64,34 @@ def daten_vor_startpunkt_loeschen():
         axs[1].set(xlabel="Time (s)", ylabel="Current (mA)", title="Current")
         axs[1].grid(True)
         axs[0].grid(True)
-        plt.savefig(folder + "/AnfangAbgeschnitten.png")
+        plt.savefig(folder / "AnfangAbgeschnitten.png")
 
-        current.to_csv(folder + "/currentAnfangAbgeschnitten.csv", index=False)
-        position.to_csv(folder + "/positionAnfangAbgeschnitten.csv", index=False)
+        current.to_csv(folder / "currentAnfangAbgeschnitten.csv", index=False)
+        position.to_csv(folder / "positionAnfangAbgeschnitten.csv", index=False)
 
 
 
 def daten_visualisieren():
     for folder in folders:
-        current = pd.read_csv(folder + "/" + filename_current)
-        position = pd.read_csv(folder + "/" + filename_position)
+        folder = Path(folder)
+        current = pd.read_csv(folder / filename_current)
+        position = pd.read_csv(folder / filename_position)
 
         fig, axs = plt.subplots(2, 1, figsize=(10, 6), sharex=True, layout="constrained")
-        fig.suptitle(folder.split('/')[-1])
+        fig.suptitle(folder.name)
         axs[0].plot(position["time_[s]"], position["position_[mm]"], color='b')
         axs[0].set(xlabel='Time [s]', ylabel='Position [mm]', title='Position')
         axs[1].plot(current["time_[s]"], current["current_[mA]"], color='r')
         axs[1].set(xlabel='Time [s]', ylabel='Current [mA]', title='Current')
-        plt.savefig(folder + "/" + folder.split('/')[-1] + "_rohdaten" + ".png")
+        plt.savefig(folder / (folder.name + "_rohdaten.png"))
 
 
 folders = [
-    r'./SammlunghigherSamplingRatedekodiert/2026-01-20_19-30-34SpezSeg3_highSampling',
-    r'./SammlunghigherSamplingRatedekodiert/2026-01-20_19-33-13MyPilger5_highSampling',
+    r'.\Motoroffset\2026-01-31_13-00-21_motoroffset_bestimmen',
+    r'.\Motoroffset\2026-01-31_14-42-30',
+    r'.\Motoroffset\2026-01-31_14-48-46',
+    r'.\Motoroffset\2026-01-31_14-55-41',
+    r'.\Motoroffset\2026-01-31_15-04-14'
 ]
 #------------------Datenverarbeitung--------------------
 
@@ -95,5 +103,3 @@ daten_vor_startpunkt_loeschen()
 filename_current = "currentAnfangAbgeschnitten.csv"
 filename_position = "positionAnfangAbgeschnitten.csv"
 daten_eigenschaften()
-
-

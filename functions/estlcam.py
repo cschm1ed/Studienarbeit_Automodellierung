@@ -86,7 +86,7 @@ def openReferenceRun():
         #Pilger5: 454:375
         #Pilger1: 487:429
         #488
-        time.sleep(9)
+        time.sleep(12)
 
         pyautogui.moveTo(2008, 1119, MOUSE_MOVEMENT_DURATION)
         pyautogui.click(2008, 1119)

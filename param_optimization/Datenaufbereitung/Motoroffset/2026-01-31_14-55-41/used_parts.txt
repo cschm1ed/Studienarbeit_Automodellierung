@@ -1,0 +1,7 @@
+Used parts:
+
+Motor: Servomotor
+Getriebe: Zahnriemen
+
+
+2026-01-31_14-55-41

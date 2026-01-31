@@ -1,0 +1,18 @@
+## Das ist nur mein (Christian) nachbau von SpezSeg3 von Rutschke
+## Alles nach Augenmaß (leider)
+
+; Pilgrim_1
+; Anfahren X200
+; N80 G90     	 			#Wechsel zu absoluter Programmierung
+; N85 G55					# ist ein G-Code, der oft für die Auswahl eines Werkzeuglängenoffsets verwendet wird.
+; N95 G04 P10
+
+
+; Pilgrim_1
+M09
+G01 X850 F6000
+G01 X830  F300
+G01 X530 F9000
+G01 X580  F5000
+# G01 für Linearinterpolation
+M08
