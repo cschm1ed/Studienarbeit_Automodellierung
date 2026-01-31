@@ -23,6 +23,7 @@ dauer = 60
 # Benutzte Teile:
 motor = 'Servomotor'
 getriebe = 'Zahnriemen'
+G_code_path = "../G-Code/doppelsinus.nc"
 
 # Mailadresse:
 mailadress = 'schmiedt.christi.a23@student.dhbw-karlsruhe.de'
@@ -38,6 +39,12 @@ Estlcam.openReferenceRun()
 # Mail beim Start senden
 if EMAIL_ACTIVE:
     General.sendMail(recieveradress=mailadress, iteration=0, numberofdrives=n)
+
+# g_code in Datei kopieren
+ausgefuehrter_g_code_pfad = r"C:\Users\proki\Desktop\Referenzfahrt_1&5\WirdAusgeführt.nc"
+with open(G_code_path, "r") as src, open(ausgefuehrter_g_code_pfad, "w") as dst:
+    dst.write(src.read())
+
 # durch Anzahl der Referenzfahrten iterieren
 for i in range(1, n + 1):
     print("--- Start Referenzfahrt " + str(i) + "/" + str(n) + ":\t" + motor + " - " + getriebe)
