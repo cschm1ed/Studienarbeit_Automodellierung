@@ -88,12 +88,24 @@ class ProgressCallback(Callback):
         self.total_iterations = total_iterations
         self.total_gens = total_gens
         self.case = case
+        self.prev_best_fitness = None
 
     def notify(self, algorithm):
         # algorithm.n_gen returns the number of generations completed so far
+        current_best_fitness = float(np.min(algorithm.pop.get("F")))
+
+        if self.prev_best_fitness is not None and self.prev_best_fitness != 0:
+            rel_change = (current_best_fitness - self.prev_best_fitness) / abs(self.prev_best_fitness)
+            rel_change_str = f"{rel_change:+.4%}"
+        else:
+            rel_change_str = "N/A"
+
         print("---------------------------------------")
         print(f"GENERATION: {algorithm.n_gen}/{self.total_gens}; ITERATION: {self.current_iteration}/{self.total_iterations}, CASE: {self.case}")
+        print(f"Best Fitness: {current_best_fitness:.6f}  |  Relative Change: {rel_change_str}")
         print("---------------------------------------")
+
+        self.prev_best_fitness = current_best_fitness
 
         if LOGGING:
             current_x = algorithm.pop.get("X")
