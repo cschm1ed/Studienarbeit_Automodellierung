@@ -20,44 +20,25 @@ ITERATIONS = 1  # -> Parameter für APSO
 LOGGING = True# Wenn True LOGGING = True wird die historie aller Parameter in einer csv gespeichert
 
 ## Reihenfolge in dictionary ist relevant damit c1 - c17 iteriert werden kann
-params_best_estimate_lower_bound = {
-    "Staender-Daempfung"     : 0,      ## [N/(m*s)]
-    "Staender-Steifigkeit"   : 0,  ## [N/m]
-    "Staender-Masse"         : 0,        ## [kg]
-    "Spindel-Daempfung"      : 0,      ## [N/(m*s)]
-    "Spindel-Steifigkeit"    : 0,   ## [N/m]
-    "Spindelgehaeuse-Masse"  : 0,         ## [kg]
-    "Spindel-Masse"          : 0,         ## [kg]
-    "KGT-Daempfung"          : 0,      ## [N/(m*s)]
-    "KGT-Steifigkeit"        : 0,   ## [N/m]
-    "KGT-Trägheitsmoment"    : 0,     ## [kg*m²]
-    "Reibung-viskos"         : 0,       ## [N*m/(rad*s)]
-    "Riemen-Daempfung"       : 0,           ## [N*m/rad]
-    "Riemen-Steifigkeit"     : 0,      ## [N*m/rad]
-    "Getriebe-Wirkungsgrad"  : 0,        ## [-]
-    "Getriebe-Uebersetzung"  : 0,     ## [-]
-    "Leitspundel-Steigung"   : 0,        ## [m]
-    "Motor-Trägheitsmoment"  : 0      ## [kg*m²]
-}
-
-params_best_estimate_upper_bound = {
-    "Staender-Daempfung": 10e6,  ## [N/(m*s)]
-    "Staender-Steifigkeit": 10e10,  ## [N/m]
-    "Staender-Masse": 10e4,  ## [kg]
-    "Spindel-Daempfung": 10e8,  ## [N/(m*s)]
-    "Spindel-Steifigkeit": 10e10,  ## [N/m]
-    "Spindelgehaeuse-Masse": 10e3,  ## [kg]
-    "Spindel-Masse": 10e3,  ## [kg]
-    "KGT-Daempfung": 10e8,  ## [N/(m*s)]
-    "KGT-Steifigkeit": 10e10,  ## [N/m]
-    "KGT-Trägheitsmoment": 10e2,  ## [kg*m²]
-    "Reibung-viskos": 10e2,  ## [N*m/(rad*s)]
-    "Riemen-Daempfung": 1,  ## [N*m/rad]
-    "Riemen-Steifigkeit": 10e10,  ## [N*m/rad]
-    "Getriebe-Wirkungsgrad": 1,  ## [-]
-    "Getriebe-Uebersetzung": 10e3,  ## [-]
-    "Leitspundel-Steigung": 0.1,  ## [m]
-    "Motor-Trägheitsmoment": 10e1  ## [kg*m²]
+## Werte als (lower_bound, upper_bound) Tupel
+params_best_estimate_bounds = {
+    "Staender-Daempfung"     : (0, 10e6),      ## [N/(m*s)]
+    "Staender-Steifigkeit"   : (0, 10e10),     ## [N/m]
+    "Staender-Masse"         : (0, 10e4),      ## [kg]
+    "Spindel-Daempfung"      : (0, 10e8),      ## [N/(m*s)]
+    "Spindel-Steifigkeit"    : (0, 10e10),     ## [N/m]
+    "Spindelgehaeuse-Masse"  : (0, 10e3),      ## [kg]
+    "Spindel-Masse"          : (0, 10e3),      ## [kg]
+    "KGT-Daempfung"          : (0, 10e8),      ## [N/(m*s)]
+    "KGT-Steifigkeit"        : (0, 10e10),     ## [N/m]
+    "KGT-Trägheitsmoment"    : (0, 10e2),      ## [kg*m²]
+    "Reibung-viskos"         : (0, 10e2),      ## [N*m/(rad*s)]
+    "Riemen-Daempfung"       : (0, 1),         ## [N*m/rad]
+    "Riemen-Steifigkeit"     : (0, 10e10),     ## [N*m/rad]
+    "Getriebe-Wirkungsgrad"  : (0, 1),         ## [-]
+    "Getriebe-Uebersetzung"  : (0, 10e3),      ## [-]
+    "Leitspundel-Steigung"   : (0, 0.1),       ## [m]
+    "Motor-Trägheitsmoment"  : (0, 10e1)       ## [kg*m²]
 }
 
 
@@ -83,25 +64,25 @@ def main():
     ## c1 - c7 wie in Matlab-Modell bzw. in Arbeit
     deviation = 0.05
     params_dim_red_upper_bounds = [
-                    params_best_estimate_upper_bound["Staender-Masse"] + params_best_estimate_upper_bound["Spindel-Masse"]
-                        + params_best_estimate_upper_bound["Spindelgehaeuse-Masse"], ## Gesamtmasse
-                    params_best_estimate_upper_bound["KGT-Trägheitsmoment"],
-                    params_best_estimate_upper_bound["Reibung-viskos"],
-                    params_best_estimate_upper_bound["Getriebe-Wirkungsgrad"],
-                    params_best_estimate_upper_bound["Getriebe-Uebersetzung"],
-                    params_best_estimate_upper_bound["Leitspundel-Steigung"],
-                    params_best_estimate_upper_bound["Motor-Trägheitsmoment"]
+                    params_best_estimate_bounds["Staender-Masse"][1] + params_best_estimate_bounds["Spindel-Masse"][1]
+                        + params_best_estimate_bounds["Spindelgehaeuse-Masse"][1], ## Gesamtmasse
+                    params_best_estimate_bounds["KGT-Trägheitsmoment"][1],
+                    params_best_estimate_bounds["Reibung-viskos"][1],
+                    params_best_estimate_bounds["Getriebe-Wirkungsgrad"][1],
+                    params_best_estimate_bounds["Getriebe-Uebersetzung"][1],
+                    params_best_estimate_bounds["Leitspundel-Steigung"][1],
+                    params_best_estimate_bounds["Motor-Trägheitsmoment"][1]
                     ]
 
     params_dim_red_lower_bounds = [
-                    params_best_estimate_lower_bound["Staender-Masse"] + params_best_estimate_lower_bound["Spindel-Masse"]
-                        + params_best_estimate_lower_bound["Spindelgehaeuse-Masse"], ## Gesamtmasse
-                    params_best_estimate_lower_bound["KGT-Trägheitsmoment"],
-                    params_best_estimate_lower_bound["Reibung-viskos"],
-                    params_best_estimate_lower_bound["Getriebe-Wirkungsgrad"],
-                    params_best_estimate_lower_bound["Getriebe-Uebersetzung"],
-                    params_best_estimate_lower_bound["Leitspundel-Steigung"],
-                    params_best_estimate_lower_bound["Motor-Trägheitsmoment"]
+                    params_best_estimate_bounds["Staender-Masse"][0] + params_best_estimate_bounds["Spindel-Masse"][0]
+                        + params_best_estimate_bounds["Spindelgehaeuse-Masse"][0], ## Gesamtmasse
+                    params_best_estimate_bounds["KGT-Trägheitsmoment"][0],
+                    params_best_estimate_bounds["Reibung-viskos"][0],
+                    params_best_estimate_bounds["Getriebe-Wirkungsgrad"][0],
+                    params_best_estimate_bounds["Getriebe-Uebersetzung"][0],
+                    params_best_estimate_bounds["Leitspundel-Steigung"][0],
+                    params_best_estimate_bounds["Motor-Trägheitsmoment"][0]
                     ]
 
     x_ref_path = os.path.join("Datenaufbereitung", "SammlungDrehzUndVorschubKorrigiertDekodiert",
@@ -117,50 +98,47 @@ def main():
     #-------- Definition des Suchraums volles Modell ----------
     # Berechnung der Massen
 
-    deviation_preoptimized = 1.1
-    new_estimates_upper_bounds = {
-        "Staender-Daempfung"     : params_best_estimate_upper_bound["Staender-Daempfung"],      ## [N/(m*s)]
-        "Staender-Steifigkeit"   : params_best_estimate_upper_bound["Staender-Steifigkeit"],  ## [N/m]
-        "Staender-Masse"         : params_best_estimate_upper_bound["Staender-Masse"],        ## [kg]
-        "Spindel-Daempfung"      : params_best_estimate_upper_bound["Spindel-Daempfung"],      ## [N/(m*s)]
-        "Spindel-Steifigkeit"    : params_best_estimate_upper_bound["Spindel-Steifigkeit"],   ## [N/m]
-        "Spindelgehaeuse-Masse"  : params_best_estimate_upper_bound["Spindelgehaeuse-Masse"],     ## [kg]
-        "Spindel-Masse"          : params_best_estimate_upper_bound["Spindel-Masse"],         ## [kg]
-        "KGT-Daempfung"          : params_best_estimate_upper_bound["KGT-Daempfung"],      ## [N/(m*s)]
-        "KGT-Steifigkeit"        : params_best_estimate_upper_bound["KGT-Steifigkeit"],   ## [N/m]
-        "KGT-Trägheitsmoment"    : df_apso_DimRed['KGT-Trägheitsmoment'].loc['mean'].copy() * deviation_preoptimized,     ## [kg*m²]
-        "Reibung-viskos"         : df_apso_DimRed['Reibung-viskos'].loc['mean'].copy() * deviation_preoptimized,     ## [N*m/(rad*s)]
-        "Riemen-Daempfung"       : params_best_estimate_upper_bound["Riemen-Daempfung"],           ## [N*m/rad]
-        "Riemen-Steifigkeit"     : params_best_estimate_upper_bound["Riemen-Steifigkeit"],      ## [N*m/rad]
-        "Getriebe-Wirkungsgrad"  : df_apso_DimRed['Getriebe-Wirkungsgrad'].loc['mean'].copy() * deviation_preoptimized,     ## [-]
-        "Getriebe-Uebersetzung"  : df_apso_DimRed['Getriebe-Uebersetzung'].loc['mean'].copy() * deviation_preoptimized,     ## [-]
-        "Leitspundel-Steigung"   : df_apso_DimRed['Leitspundel-Steigung'].loc['mean'].copy() * deviation_preoptimized,     ## [m]
-        "Motor-Trägheitsmoment"  : df_apso_DimRed['Motor-Trägheitsmoment'].loc['mean'].copy() * deviation_preoptimized     ## [kg*m²]
+    deviation_preopt_lower = 0.9
+    deviation_preopt_upper = 1.1
+    new_estimates_bounds = {
+        "Staender-Daempfung"     : (params_best_estimate_bounds["Staender-Daempfung"][0],
+                                    params_best_estimate_bounds["Staender-Daempfung"][1]),      ## [N/(m*s)]
+        "Staender-Steifigkeit"   : (params_best_estimate_bounds["Staender-Steifigkeit"][0],
+                                    params_best_estimate_bounds["Staender-Steifigkeit"][1]),    ## [N/m]
+        "Staender-Masse"         : (params_best_estimate_bounds["Staender-Masse"][0],
+                                    params_best_estimate_bounds["Staender-Masse"][1]),          ## [kg]
+        "Spindel-Daempfung"      : (params_best_estimate_bounds["Spindel-Daempfung"][0],
+                                    params_best_estimate_bounds["Spindel-Daempfung"][1]),      ## [N/(m*s)]
+        "Spindel-Steifigkeit"    : (params_best_estimate_bounds["Spindel-Steifigkeit"][0],
+                                    params_best_estimate_bounds["Spindel-Steifigkeit"][1]),    ## [N/m]
+        "Spindelgehaeuse-Masse"  : (params_best_estimate_bounds["Spindelgehaeuse-Masse"][0],
+                                    params_best_estimate_bounds["Spindelgehaeuse-Masse"][1]),  ## [kg]
+        "Spindel-Masse"          : (params_best_estimate_bounds["Spindel-Masse"][0],
+                                    params_best_estimate_bounds["Spindel-Masse"][1]),          ## [kg]
+        "KGT-Daempfung"          : (params_best_estimate_bounds["KGT-Daempfung"][0],
+                                    params_best_estimate_bounds["KGT-Daempfung"][1]),          ## [N/(m*s)]
+        "KGT-Steifigkeit"        : (params_best_estimate_bounds["KGT-Steifigkeit"][0],
+                                    params_best_estimate_bounds["KGT-Steifigkeit"][1]),        ## [N/m]
+        "KGT-Trägheitsmoment"    : (df_apso_DimRed['KGT-Trägheitsmoment'].loc['mean'].copy() * deviation_preopt_lower,
+                                    df_apso_DimRed['KGT-Trägheitsmoment'].loc['mean'].copy() * deviation_preopt_upper),     ## [kg*m²]
+        "Reibung-viskos"         : (df_apso_DimRed['Reibung-viskos'].loc['mean'].copy() * deviation_preopt_lower,
+                                    df_apso_DimRed['Reibung-viskos'].loc['mean'].copy() * deviation_preopt_upper),          ## [N*m/(rad*s)]
+        "Riemen-Daempfung"       : (params_best_estimate_bounds["Riemen-Daempfung"][0],
+                                    params_best_estimate_bounds["Riemen-Daempfung"][1]),       ## [N*m/rad]
+        "Riemen-Steifigkeit"     : (params_best_estimate_bounds["Riemen-Steifigkeit"][0],
+                                    params_best_estimate_bounds["Riemen-Steifigkeit"][1]),     ## [N*m/rad]
+        "Getriebe-Wirkungsgrad"  : (df_apso_DimRed['Getriebe-Wirkungsgrad'].loc['mean'].copy() * deviation_preopt_lower,
+                                    df_apso_DimRed['Getriebe-Wirkungsgrad'].loc['mean'].copy() * deviation_preopt_upper),   ## [-]
+        "Getriebe-Uebersetzung"  : (df_apso_DimRed['Getriebe-Uebersetzung'].loc['mean'].copy() * deviation_preopt_lower,
+                                    df_apso_DimRed['Getriebe-Uebersetzung'].loc['mean'].copy() * deviation_preopt_upper),   ## [-]
+        "Leitspundel-Steigung"   : (df_apso_DimRed['Leitspundel-Steigung'].loc['mean'].copy() * deviation_preopt_lower,
+                                    df_apso_DimRed['Leitspundel-Steigung'].loc['mean'].copy() * deviation_preopt_upper),    ## [m]
+        "Motor-Trägheitsmoment"  : (df_apso_DimRed['Motor-Trägheitsmoment'].loc['mean'].copy() * deviation_preopt_lower,
+                                    df_apso_DimRed['Motor-Trägheitsmoment'].loc['mean'].copy() * deviation_preopt_upper)    ## [kg*m²]
     }
 
-    deviation_preoptimized = 0.9
-    new_estimates_lower_bounds = {
-        "Staender-Daempfung"     : params_best_estimate_lower_bound["Staender-Daempfung"],      ## [N/(m*s)]
-        "Staender-Steifigkeit"   : params_best_estimate_lower_bound["Staender-Steifigkeit"],  ## [N/m]
-        "Staender-Masse"         : params_best_estimate_lower_bound["Staender-Masse"],        ## [kg]
-        "Spindel-Daempfung"      : params_best_estimate_lower_bound["Spindel-Daempfung"],      ## [N/(m*s)]
-        "Spindel-Steifigkeit"    : params_best_estimate_lower_bound["Spindel-Steifigkeit"],   ## [N/m]
-        "Spindelgehaeuse-Masse"  : params_best_estimate_lower_bound["Spindelgehaeuse-Masse"],     ## [kg]
-        "Spindel-Masse"          : params_best_estimate_lower_bound["Spindel-Masse"],         ## [kg]
-        "KGT-Daempfung"          : params_best_estimate_lower_bound["KGT-Daempfung"],      ## [N/(m*s)]
-        "KGT-Steifigkeit"        : params_best_estimate_lower_bound["KGT-Steifigkeit"],   ## [N/m]
-        "KGT-Trägheitsmoment"    : df_apso_DimRed['KGT-Trägheitsmoment'].loc['mean'].copy() * deviation_preoptimized,     ## [kg*m²]
-        "Reibung-viskos"         : df_apso_DimRed['Reibung-viskos'].loc['mean'].copy() * deviation_preoptimized,     ## [N*m/(rad*s)]
-        "Riemen-Daempfung"       : params_best_estimate_lower_bound["Riemen-Daempfung"],           ## [N*m/rad]
-        "Riemen-Steifigkeit"     : params_best_estimate_lower_bound["Riemen-Steifigkeit"],      ## [N*m/rad]
-        "Getriebe-Wirkungsgrad"  : df_apso_DimRed['Getriebe-Wirkungsgrad'].loc['mean'].copy() * deviation_preoptimized,     ## [-]
-        "Getriebe-Uebersetzung"  : df_apso_DimRed['Getriebe-Uebersetzung'].loc['mean'].copy() * deviation_preoptimized,     ## [-]
-        "Leitspundel-Steigung"   : df_apso_DimRed['Leitspundel-Steigung'].loc['mean'].copy() * deviation_preoptimized,     ## [m]
-        "Motor-Trägheitsmoment"  : df_apso_DimRed['Motor-Trägheitsmoment'].loc['mean'].copy() * deviation_preoptimized     ## [kg*m²]
-    }
-
-    lower_bounds = [value for value in new_estimates_lower_bounds.values()]
-    upper_bounds = [value for value in new_estimates_upper_bounds.values()]
+    lower_bounds = [bounds[0] for bounds in new_estimates_bounds.values()]
+    upper_bounds = [bounds[1] for bounds in new_estimates_bounds.values()]
 
 
     with open("myLog", "w") as mylogfile:
