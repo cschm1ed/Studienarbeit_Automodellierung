@@ -11,6 +11,17 @@ LOGGING = True
 FALL_7_VARS = 1
 FALL_17_VARS = 2
 
+PARAM_NAMES_7 = ["Gesamtmasse", "KGT-Trägheitsmoment", "Reibung-viskos",
+                  "Getriebe-Wirkungsgrad", "Getriebe-Uebersetzung",
+                  "Leitspundel-Steigung", "Motor-Trägheitsmoment"]
+
+PARAM_NAMES_17 = ["Staender-Daempfung", "Staender-Steifigkeit", "Staender-Masse",
+                   "Spindel-Daempfung", "Spindel-Steifigkeit", "Spindelgehaeuse-Masse",
+                   "Spindel-Masse", "KGT-Daempfung", "KGT-Steifigkeit",
+                   "KGT-Trägheitsmoment", "Reibung-viskos", "Riemen-Daempfung",
+                   "Riemen-Steifigkeit", "Getriebe-Wirkungsgrad", "Getriebe-Uebersetzung",
+                   "Leitspundel-Steigung", "Motor-Trägheitsmoment"]
+
 class MyProblem(Problem):
     # statischen Variablen die für die parallele Ausführung und die Vervendung von verschiedene Modelle benötigt werden.
     static_n_pop = 0
@@ -89,6 +100,13 @@ class ProgressCallback(Callback):
             n_particles = current_x.shape[0]
             gen_column = np.full((n_particles, 1), algorithm.n_gen)
             data_to_save = np.hstack((current_x, gen_column))
-            with open(f"parameter_historie_fall_{self.case}.csv", "a", newline="") as f:
+            mode = "w" if algorithm.n_gen == 1 else "a"
+            with open(f"parameter_historie_fall_{self.case}.csv", mode, newline="") as f:
                 csvWriter = csv.writer(f, delimiter=',')
+                if algorithm.n_gen == 1:
+                    if self.case == FALL_7_VARS:
+                        header = PARAM_NAMES_7 + ["Generation"]
+                    elif self.case == FALL_17_VARS:
+                        header = PARAM_NAMES_17 + ["Generation"]
+                    csvWriter.writerow(header)
                 csvWriter.writerows(data_to_save)
