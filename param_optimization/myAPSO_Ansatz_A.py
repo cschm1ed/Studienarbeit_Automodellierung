@@ -98,14 +98,14 @@ def main():
         "Spindel-Masse"          : params_best_estimate["Spindel-Masse"],         ## [kg]
         "KGT-Daempfung"          : params_best_estimate["KGT-Daempfung"],      ## [N/(m*s)]
         "KGT-Steifigkeit"        : params_best_estimate["KGT-Steifigkeit"],   ## [N/m]
-        "KGT-Trägheitsmoment"    : df_apso_DimRed['Variable2'].loc['mean'].copy(),     ## [kg*m²]
-        "Reibung-viskos"         : df_apso_DimRed['Variable3'].loc['mean'].copy(),     ## [N*m/(rad*s)]
+        "KGT-Trägheitsmoment"    : df_apso_DimRed['KGT-Trägheitsmoment'].loc['mean'].copy(),     ## [kg*m²]
+        "Reibung-viskos"         : df_apso_DimRed['Reibung-viskos'].loc['mean'].copy(),     ## [N*m/(rad*s)]
         "Riemen-Daempfung"       : params_best_estimate["Riemen-Daempfung"],           ## [N*m/rad]
         "Riemen-Steifigkeit"     : params_best_estimate["Riemen-Steifigkeit"],      ## [N*m/rad]
-        "Getriebe-Wirkungsgrad"  : df_apso_DimRed['Variable4'].loc['mean'].copy(),     ## [-]
-        "Getriebe-Uebersetzung"  : df_apso_DimRed['Variable5'].loc['mean'].copy(),     ## [-]
-        "Leitspundel-Steigung"   : df_apso_DimRed['Variable6'].loc['mean'].copy(),     ## [m]
-        "Motor-Trägheitsmoment"  : df_apso_DimRed['Variable7'].loc['mean'].copy()      ## [kg*m²]
+        "Getriebe-Wirkungsgrad"  : df_apso_DimRed['Getriebe-Wirkungsgrad'].loc['mean'].copy(),     ## [-]
+        "Getriebe-Uebersetzung"  : df_apso_DimRed['Getriebe-Uebersetzung'].loc['mean'].copy(),     ## [-]
+        "Leitspundel-Steigung"   : df_apso_DimRed['Leitspundel-Steigung'].loc['mean'].copy(),     ## [m]
+        "Motor-Trägheitsmoment"  : df_apso_DimRed['Motor-Trägheitsmoment'].loc['mean'].copy()      ## [kg*m²]
     }
     new_estimates_optimized_names = ["KGT-Trägheitsmoment", "Reibung-viskos",
                                      "Getriebe-Wirkungsgrad", "Getriebe-Uebersetzung", "Leitspindel-Steigung",
@@ -137,9 +137,9 @@ def new_referenceDrive(case, x_l, x_u, eng, n_gen, n_pop, x_ref_array):
     with open("apso_finalerAnsatz_A40_Fall_{}.csv".format(case), "w", newline="") as file:
         writer = csv.writer(file, delimiter=",")
         if case == FALL_7_VARS:
-            titel = [f"Variable{i}" for i in range(1, 7 + 1)] + ["beste Fitness", "Zeit"]
+            titel = list(PARAM_NAMES_7) + ["beste Fitness", "Zeit"]
         elif case == FALL_17_VARS:
-            titel = [f"Variable{i}" for i in range(1, 17 + 1)] + ["beste Fitness", "Zeit"]
+            titel = list(PARAM_NAMES_17) + ["beste Fitness", "Zeit"]
         for i in range(1, n_gen + 1):  # Fitnessverlauf für Dataframe
             titel.append("Fitnessverlauf{}".format(i))
         writer.writerow(titel)
