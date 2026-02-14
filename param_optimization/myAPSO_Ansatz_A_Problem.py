@@ -13,14 +13,14 @@ FALL_17_VARS = 2
 
 PARAM_NAMES_7 = ["Gesamtmasse", "KGT-Trägheitsmoment", "Reibung-viskos",
                   "Getriebe-Wirkungsgrad", "Getriebe-Uebersetzung",
-                  "Leitspundel-Steigung", "Motor-Trägheitsmoment"]
+                  "Leitspindel-Steigung", "Motor-Trägheitsmoment"]
 
 PARAM_NAMES_17 = ["Staender-Daempfung", "Staender-Steifigkeit", "Staender-Masse",
                    "Spindel-Daempfung", "Spindel-Steifigkeit", "Spindelgehaeuse-Masse",
                    "Spindel-Masse", "KGT-Daempfung", "KGT-Steifigkeit",
                    "KGT-Trägheitsmoment", "Reibung-viskos", "Riemen-Daempfung",
                    "Riemen-Steifigkeit", "Getriebe-Wirkungsgrad", "Getriebe-Uebersetzung",
-                   "Leitspundel-Steigung", "Motor-Trägheitsmoment"]
+                   "Leitspindel-Steigung", "Motor-Trägheitsmoment"]
 
 class MyProblem(Problem):
     # statischen Variablen die für die parallele Ausführung und die Vervendung von verschiedene Modelle benötigt werden.

@@ -14,33 +14,32 @@ import os
 from myAPSO_Ansatz_A_Problem_xReal import *
 import pandas as pd
 
-N_GEN = 80#|
+N_GEN = 30      #|
 N_POP = 50      #|
-ITERATIONS = 1  # -> Parameter für APSO
-LOGGING = True# Wenn True LOGGING = True wird die historie aller Parameter in einer csv gespeichert
+ITERATIONS = 5  # -> Parameter für APSO
+LOGGING = True # Wenn True LOGGING = True wird die historie aller Parameter in einer csv gespeichert
 
 ## Reihenfolge in dictionary ist relevant damit c1 - c17 iteriert werden kann
 ## Werte als (lower_bound, upper_bound) Tupel
 params_best_estimate_bounds = {
-    "Staender-Daempfung"     : (0, 10e6),      ## [N/(m*s)]
-    "Staender-Steifigkeit"   : (0, 10e10),     ## [N/m]
-    "Staender-Masse"         : (0, 10e4),      ## [kg]
-    "Spindel-Daempfung"      : (0, 10e8),      ## [N/(m*s)]
-    "Spindel-Steifigkeit"    : (0, 10e10),     ## [N/m]
-    "Spindelgehaeuse-Masse"  : (0, 10e3),      ## [kg]
-    "Spindel-Masse"          : (0, 10e3),      ## [kg]
-    "KGT-Daempfung"          : (0, 10e8),      ## [N/(m*s)]
-    "KGT-Steifigkeit"        : (0, 10e10),     ## [N/m]
-    "KGT-Trägheitsmoment"    : (0, 10e2),      ## [kg*m²]
-    "Reibung-viskos"         : (0, 10e2),      ## [N*m/(rad*s)]
-    "Riemen-Daempfung"       : (0, 1),         ## [N*m/rad]
-    "Riemen-Steifigkeit"     : (0, 10e10),     ## [N*m/rad]
-    "Getriebe-Wirkungsgrad"  : (0, 1),         ## [-]
-    "Getriebe-Uebersetzung"  : (0, 10e3),      ## [-]
-    "Leitspundel-Steigung"   : (0, 0.1),       ## [m]
-    "Motor-Trägheitsmoment"  : (0, 10e1)       ## [kg*m²]
+    "Staender-Daempfung"     : (1e-3,    1e0),      ## [N/(m*s)]
+    "Staender-Steifigkeit"   : (1e3,     1e6),      ## [N/m]
+    "Staender-Masse"         : (0.01,    1.0),      ## [kg]
+    "Spindel-Daempfung"      : (1e-3,    1e0),      ## [N/(m*s)]
+    "Spindel-Steifigkeit"    : (1e4,     1e7),      ## [N/m]
+    "Spindelgehaeuse-Masse"  : (0.005,   0.5),      ## [kg]
+    "Spindel-Masse"          : (0.005,   0.5),      ## [kg]
+    "KGT-Daempfung"          : (1e-3,    1e0),      ## [N/(m*s)]
+    "KGT-Steifigkeit"        : (1e4,     1e7),      ## [N/m]
+    "KGT-Trägheitsmoment"    : (1e-8,    1e-5),     ## [kg*m²]
+    "Reibung-viskos"         : (1e-5,    1e-2),     ## [N*m/(rad*s)]
+    "Riemen-Daempfung"       : (1e-4,    1e-1),     ## [N*m/rad]
+    "Riemen-Steifigkeit"     : (1e2,     1e5),      ## [N*m/rad]
+    "Getriebe-Wirkungsgrad"  : (0.90,    0.999),    ## [-]
+    "Getriebe-Uebersetzung"  : (0.1,     10),       ## [-]
+    "Leitspindel-Steigung"   : (0.002,   0.01),     ## [m]
+    "Motor-Trägheitsmoment"  : (1e-7,    1e-4),     ## [kg*m²]
 }
-
 
 def main():
     #--------Speicherort der Simulink-Modelle-----------
@@ -70,7 +69,7 @@ def main():
                     params_best_estimate_bounds["Reibung-viskos"][1],
                     params_best_estimate_bounds["Getriebe-Wirkungsgrad"][1],
                     params_best_estimate_bounds["Getriebe-Uebersetzung"][1],
-                    params_best_estimate_bounds["Leitspundel-Steigung"][1],
+                    params_best_estimate_bounds["Leitspindel-Steigung"][1],
                     params_best_estimate_bounds["Motor-Trägheitsmoment"][1]
                     ]
 
@@ -81,12 +80,12 @@ def main():
                     params_best_estimate_bounds["Reibung-viskos"][0],
                     params_best_estimate_bounds["Getriebe-Wirkungsgrad"][0],
                     params_best_estimate_bounds["Getriebe-Uebersetzung"][0],
-                    params_best_estimate_bounds["Leitspundel-Steigung"][0],
+                    params_best_estimate_bounds["Leitspindel-Steigung"][0],
                     params_best_estimate_bounds["Motor-Trägheitsmoment"][0]
                     ]
 
     x_ref_path = os.path.join("Datenaufbereitung", "SammlungDrehzUndVorschubKorrigiertDekodiert",
-                              "2026-01-31_16-44-26_MyPilger5_1_F6000", "position_sim.csv")
+                              "2026-01-31_17-03-16doppelsinusF_5126_A1_5_f1_5_A2_2_f2_5_1", "position_sim.csv")
     x_ref = read_x_real_ref(x_ref_path)
     new_referenceDrive(FALL_7_VARS, params_dim_red_lower_bounds, params_dim_red_upper_bounds, eng, n_gen, n_pop, x_ref)
     df_apso_DimRed = pd.read_csv("./apso_finalerAnsatz_A40_Fall_1.csv")
@@ -131,11 +130,13 @@ def main():
                                     df_apso_DimRed['Getriebe-Wirkungsgrad'].loc['mean'].copy() * deviation_preopt_upper),   ## [-]
         "Getriebe-Uebersetzung"  : (df_apso_DimRed['Getriebe-Uebersetzung'].loc['mean'].copy() * deviation_preopt_lower,
                                     df_apso_DimRed['Getriebe-Uebersetzung'].loc['mean'].copy() * deviation_preopt_upper),   ## [-]
-        "Leitspundel-Steigung"   : (df_apso_DimRed['Leitspundel-Steigung'].loc['mean'].copy() * deviation_preopt_lower,
-                                    df_apso_DimRed['Leitspundel-Steigung'].loc['mean'].copy() * deviation_preopt_upper),    ## [m]
+        "Leitspindel-Steigung"   : (df_apso_DimRed['Leitspindel-Steigung'].loc['mean'].copy() * deviation_preopt_lower,
+                                    df_apso_DimRed['Leitspindel-Steigung'].loc['mean'].copy() * deviation_preopt_upper),    ## [m]
         "Motor-Trägheitsmoment"  : (df_apso_DimRed['Motor-Trägheitsmoment'].loc['mean'].copy() * deviation_preopt_lower,
                                     df_apso_DimRed['Motor-Trägheitsmoment'].loc['mean'].copy() * deviation_preopt_upper)    ## [kg*m²]
     }
+    if new_estimates_bounds["Getriebe-Wirkungsgrad"][1] > 1:
+        new_estimates_bounds["Getriebe-Wirkungsgrad"] = (0.99, 1)
 
     lower_bounds = [bounds[0] for bounds in new_estimates_bounds.values()]
     upper_bounds = [bounds[1] for bounds in new_estimates_bounds.values()]

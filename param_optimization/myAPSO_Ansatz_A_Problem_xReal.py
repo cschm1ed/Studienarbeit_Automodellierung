@@ -13,14 +13,19 @@ FALL_17_VARS = 2
 
 PARAM_NAMES_7 = ["Gesamtmasse", "KGT-Trägheitsmoment", "Reibung-viskos",
                   "Getriebe-Wirkungsgrad", "Getriebe-Uebersetzung",
-                  "Leitspundel-Steigung", "Motor-Trägheitsmoment"]
+                  "Leitspindel-Steigung", "Motor-Trägheitsmoment"]
 
 PARAM_NAMES_17 = ["Staender-Daempfung", "Staender-Steifigkeit", "Staender-Masse",
                    "Spindel-Daempfung", "Spindel-Steifigkeit", "Spindelgehaeuse-Masse",
                    "Spindel-Masse", "KGT-Daempfung", "KGT-Steifigkeit",
                    "KGT-Trägheitsmoment", "Reibung-viskos", "Riemen-Daempfung",
                    "Riemen-Steifigkeit", "Getriebe-Wirkungsgrad", "Getriebe-Uebersetzung",
-                   "Leitspundel-Steigung", "Motor-Trägheitsmoment"]
+                   "Leitspindel-Steigung", "Motor-Trägheitsmoment"]
+
+START_POS1 = 0.0047776
+START_POS2 = START_POS1
+SIMULINK_MODEL_1 = "doppelsinus_7V"
+SIMULINK_MODEL_2 = "doppelsinus_17V"
 
 class MyProblem(Problem):
     # statischen Variablen die für die parallele Ausführung und die Vervendung von verschiedene Modelle benötigt werden.
@@ -46,11 +51,11 @@ class MyProblem(Problem):
         x = x_np.tolist()
         simulinkModell = ""
         if self.__class__.static_case == FALL_7_VARS:
-            MyProblem.engine.assignin('base', 'start_position', matlab.double(-200), nargout=0)
-            simulinkModell = 'test_MyPilger5_7V'
+            MyProblem.engine.assignin('base', 'start_position', matlab.double(START_POS1), nargout=0)
+            simulinkModell = SIMULINK_MODEL_1
         elif self.__class__.static_case == FALL_17_VARS:
-            MyProblem.engine.assignin('base', 'start_position', matlab.double(-200), nargout=0)
-            simulinkModell = 'test_MyPilger5_17V'
+            MyProblem.engine.assignin('base', 'start_position', matlab.double(START_POS2), nargout=0)
+            simulinkModell = SIMULINK_MODEL_2
 
         # Run Parallel Simulation
         matlab_matrix = matlab.double(x)
@@ -89,23 +94,34 @@ class ProgressCallback(Callback):
         self.total_gens = total_gens
         self.case = case
         self.prev_best_fitness = None
+        self.prev_average_fitness = None
 
     def notify(self, algorithm):
         # algorithm.n_gen returns the number of generations completed so far
         current_best_fitness = float(np.min(algorithm.pop.get("F")))
+        current_average_fitness = float(np.average(algorithm.pop.get("F")))
+
 
         if self.prev_best_fitness is not None and self.prev_best_fitness != 0:
-            rel_change = (current_best_fitness - self.prev_best_fitness) / abs(self.prev_best_fitness)
-            rel_change_str = f"{rel_change:+.4%}"
+            rel_change_best = (current_best_fitness - self.prev_best_fitness) / abs(self.prev_best_fitness)
+            rel_change_best_str = f"{rel_change_best:+.4%}"
         else:
-            rel_change_str = "N/A"
+            rel_change_best_str = "N/A"
+
+        if self.prev_average_fitness is not None and self.prev_average_fitness != 0:
+            rel_change_average = (current_average_fitness - self.prev_average_fitness) / abs(self.prev_average_fitness)
+            rel_change_average_str = f"{rel_change_average:+.4%}"
+        else:
+            rel_change_average_str = "N/A"
 
         print("---------------------------------------")
         print(f"GENERATION: {algorithm.n_gen}/{self.total_gens}; ITERATION: {self.current_iteration}/{self.total_iterations}, CASE: {self.case}")
-        print(f"Best Fitness: {current_best_fitness:.6f}  |  Relative Change: {rel_change_str}")
+        print(f"Best Fitness: {current_best_fitness:.6f}  |  Relative Change: {rel_change_best_str}")
+        print(f"Average Fitness: {current_average_fitness:.6f}  |  Relative Change: {rel_change_average_str}")
         print("---------------------------------------")
 
         self.prev_best_fitness = current_best_fitness
+        self.prev_average_fitness = current_average_fitness
 
         if LOGGING:
             current_x = algorithm.pop.get("X")

@@ -33,7 +33,7 @@ params_best_estimate = {
     "Riemen-Steifigkeit"     : 200000,      ## [N*m/rad]
     "Getriebe-Wirkungsgrad"  : 0.98,        ## [-]
     "Getriebe-Uebersetzung"  : 55 / 24,     ## [-]
-    "Leitspundel-Steigung"   : 0.02,        ## [m]
+    "Leitspindel-Steigung"   : 0.02,        ## [m]
     "Motor-Trägheitsmoment"  : 0.00451      ## [kg*m²]
 }
 
@@ -68,7 +68,7 @@ def main():
                     params_best_estimate["Reibung-viskos"],
                     params_best_estimate["Getriebe-Wirkungsgrad"],
                     params_best_estimate["Getriebe-Uebersetzung"],
-                    params_best_estimate["Leitspundel-Steigung"],
+                    params_best_estimate["Leitspindel-Steigung"],
                     params_best_estimate["Motor-Trägheitsmoment"]
                     ]
     x_lower_bounds = np.multiply(params_dim_red, 1 - deviation) #-5% Abweichungin csv-D
@@ -104,7 +104,7 @@ def main():
         "Riemen-Steifigkeit"     : params_best_estimate["Riemen-Steifigkeit"],      ## [N*m/rad]
         "Getriebe-Wirkungsgrad"  : df_apso_DimRed['Getriebe-Wirkungsgrad'].loc['mean'].copy(),     ## [-]
         "Getriebe-Uebersetzung"  : df_apso_DimRed['Getriebe-Uebersetzung'].loc['mean'].copy(),     ## [-]
-        "Leitspundel-Steigung"   : df_apso_DimRed['Leitspundel-Steigung'].loc['mean'].copy(),     ## [m]
+        "Leitspindel-Steigung"   : df_apso_DimRed['Leitspindel-Steigung'].loc['mean'].copy(),     ## [m]
         "Motor-Trägheitsmoment"  : df_apso_DimRed['Motor-Trägheitsmoment'].loc['mean'].copy()      ## [kg*m²]
     }
     new_estimates_optimized_names = ["KGT-Trägheitsmoment", "Reibung-viskos",
