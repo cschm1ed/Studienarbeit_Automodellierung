@@ -16,8 +16,10 @@ import pandas as pd
 
 N_GEN = 30      #|
 N_POP = 50      #|
-ITERATIONS = 5  # -> Parameter für APSO
+ITERATIONS = 1  # -> Parameter für APSO
 LOGGING = True # Wenn True LOGGING = True wird die historie aller Parameter in einer csv gespeichert
+x_ref_path = os.path.join("Datenaufbereitung", "SammlungDrehzUndVorschubKorrigiertDekodiert",
+                              "2026-01-31_17-03-16doppelsinusF_5126_A1_5_f1_5_A2_2_f2_5_1", "position_sim.csv")
 
 ## Reihenfolge in dictionary ist relevant damit c1 - c17 iteriert werden kann
 ## Werte als (lower_bound, upper_bound) Tupel
@@ -84,8 +86,7 @@ def main():
                     params_best_estimate_bounds["Motor-Trägheitsmoment"][0]
                     ]
 
-    x_ref_path = os.path.join("Datenaufbereitung", "SammlungDrehzUndVorschubKorrigiertDekodiert",
-                              "2026-01-31_17-03-16doppelsinusF_5126_A1_5_f1_5_A2_2_f2_5_1", "position_sim.csv")
+
     x_ref = read_x_real_ref(x_ref_path)
     new_referenceDrive(FALL_7_VARS, params_dim_red_lower_bounds, params_dim_red_upper_bounds, eng, n_gen, n_pop, x_ref)
     df_apso_DimRed = pd.read_csv("./apso_finalerAnsatz_A40_Fall_1.csv")

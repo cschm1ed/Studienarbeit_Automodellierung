@@ -71,6 +71,10 @@ class MyProblem(Problem):
             try:
                 xSim = MyProblem.engine.getxSim(MyProblem.engine.workspace['aut'], i + 1)
                 xSim = np.squeeze(np.array(xSim))
+
+                if np.all(np.abs(xSim) < 1):
+                    xSimS_fitness[i] = 1e12  # Penalty value for no movement
+
                 if xSim.shape == ref.shape:
                     xSimS_fitness[i] = np.sum(abs(xSim - ref))
                 else:
