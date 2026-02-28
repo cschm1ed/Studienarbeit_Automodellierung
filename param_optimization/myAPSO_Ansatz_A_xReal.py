@@ -14,33 +14,52 @@ import os
 from myAPSO_Ansatz_A_Problem_xReal import *
 import pandas as pd
 
-N_GEN = 30      #|
-N_POP = 50      #|
+N_GEN = 75      #|
+N_POP = 60      #|
 ITERATIONS = 1  # -> Parameter für APSO
 LOGGING = True # Wenn True LOGGING = True wird die historie aller Parameter in einer csv gespeichert
-x_ref_path = os.path.join("Datenaufbereitung", "SammlungDrehzUndVorschubKorrigiertDekodiert",
-                              "2026-01-31_17-03-16doppelsinusF_5126_A1_5_f1_5_A2_2_f2_5_1", "position_sim.csv")
+x_ref_path = os.path.join("Datenaufbereitung", "ModbusMessung","ModbusMessung","2026-02-21_14-46-32_doppelsinus_A1_40_T_10", "position_sim.csv")
 
 ## Reihenfolge in dictionary ist relevant damit c1 - c17 iteriert werden kann
 ## Werte als (lower_bound, upper_bound) Tupel
+#params_best_estimate_bounds = {
+#    "Staender-Daempfung"     : (1e-3,    1e-2),      ## [N/(m*s)]
+#    "Staender-Steifigkeit"   : (1e3,     1e7),      ## [N/m]
+#    "Staender-Masse"         : (1e0,    1e2),      ## [kg]
+#    "Spindel-Daempfung"      : (1e-3,    1e-2),      ## [N/(m*s)]
+#    "Spindel-Steifigkeit"    : (1e4,     1e7),      ## [N/m]
+#    "Spindelgehaeuse-Masse"  : (1e-3,   1e1),      ## [kg]
+#    "Spindel-Masse"          : (1e-3,   50),      ## [kg]
+#    "KGT-Daempfung"          : (1e-3,    1e-2),      ## [N/(m*s)]
+#    "KGT-Steifigkeit"        : (1e4,     1e7),      ## [N/m]
+#    "KGT-Trägheitsmoment"    : (8e-6,    2e-5),     ## [kg*m²]
+#    "Reibung-viskos"         : (8e-4,    2e-3),     ## [N*m/(rad*s)]
+#    "Riemen-Daempfung"       : (1e-4,    1e-3),     ## [N*m/rad]
+#    "Riemen-Steifigkeit"     : (1e2,     1e6),      ## [N*m/rad]
+#    "Getriebe-Wirkungsgrad"  : (0.90,    0.999),    ## [-]
+#    "Getriebe-Uebersetzung"  : (1.3,     1.7),       ## [-]
+#    "Leitspindel-Steigung"   : (0.002,   0.004),     ## [m]
+#    "Motor-Trägheitsmoment"  : (8e-7,    3e-6),     ## [kg*m²]
+#}
+
 params_best_estimate_bounds = {
-    "Staender-Daempfung"     : (1e-3,    1e0),      ## [N/(m*s)]
-    "Staender-Steifigkeit"   : (1e3,     1e6),      ## [N/m]
-    "Staender-Masse"         : (0.01,    1.0),      ## [kg]
-    "Spindel-Daempfung"      : (1e-3,    1e0),      ## [N/(m*s)]
-    "Spindel-Steifigkeit"    : (1e4,     1e7),      ## [N/m]
-    "Spindelgehaeuse-Masse"  : (0.005,   0.5),      ## [kg]
-    "Spindel-Masse"          : (0.005,   0.5),      ## [kg]
-    "KGT-Daempfung"          : (1e-3,    1e0),      ## [N/(m*s)]
-    "KGT-Steifigkeit"        : (1e4,     1e7),      ## [N/m]
-    "KGT-Trägheitsmoment"    : (1e-8,    1e-5),     ## [kg*m²]
-    "Reibung-viskos"         : (1e-5,    1e-2),     ## [N*m/(rad*s)]
-    "Riemen-Daempfung"       : (1e-4,    1e-1),     ## [N*m/rad]
-    "Riemen-Steifigkeit"     : (1e2,     1e5),      ## [N*m/rad]
-    "Getriebe-Wirkungsgrad"  : (0.90,    0.999),    ## [-]
-    "Getriebe-Uebersetzung"  : (0.1,     10),       ## [-]
-    "Leitspindel-Steigung"   : (0.002,   0.01),     ## [m]
-    "Motor-Trägheitsmoment"  : (1e-7,    1e-4),     ## [kg*m²]
+    "Staender-Daempfung"     : (1e-4,    1e-1),      ## [N/(m*s)]
+    "Staender-Steifigkeit"   : (1e3,     1e8),       ## [N/m]
+    "Staender-Masse"         : (1e-1,    1e3),       ## [kg]
+    "Spindel-Daempfung"      : (1e-6,    1),      ## [N/(m*s)]
+    "Spindel-Steifigkeit"    : (1e3,     1e8),       ## [N/m]
+    "Spindelgehaeuse-Masse"  : (1e-4,    1e3),       ## [kg]
+    "Spindel-Masse"          : (1e-4,    1e3),       ## [kg]
+    "KGT-Daempfung"          : (1e-4,    1e-1),      ## [N/(m*s)]
+    "KGT-Steifigkeit"        : (1e3,     1e8),       ## [N/m]
+    "KGT-Trägheitsmoment"    : (8e-7,    1),      ## [kg*m²]
+    "Reibung-viskos"         : (8e-7,    1),      ## [N*m/(rad*s)]
+    "Riemen-Daempfung"       : (1e-7,    1),      ## [N*m/rad]
+    "Riemen-Steifigkeit"     : (1e1,     1e8),       ## [N*m/rad]
+    "Getriebe-Wirkungsgrad"  : (0.80,    0.999),     ## [-]
+    "Getriebe-Uebersetzung"  : (0.1,     50),       ## [-]
+    "Leitspindel-Steigung"   : (0.001,   0.01),     ## [m]
+    "Motor-Trägheitsmoment"  : (8e-8,    1),      ## [kg*m²]
 }
 
 def main():
@@ -63,7 +82,7 @@ def main():
     # Durchführen Versuch mit Dimensionsreduktion
     #-------- Definition des Suchraums Dimensionsreduziert ---------
     ## c1 - c7 wie in Matlab-Modell bzw. in Arbeit
-    deviation = 0.05
+
     params_dim_red_upper_bounds = [
                     params_best_estimate_bounds["Staender-Masse"][1] + params_best_estimate_bounds["Spindel-Masse"][1]
                         + params_best_estimate_bounds["Spindelgehaeuse-Masse"][1], ## Gesamtmasse
@@ -98,8 +117,8 @@ def main():
     #-------- Definition des Suchraums volles Modell ----------
     # Berechnung der Massen
 
-    deviation_preopt_lower = 0.9
-    deviation_preopt_upper = 1.1
+    deviation_preopt_lower = 0.8
+    deviation_preopt_upper = 1.2
     new_estimates_bounds = {
         "Staender-Daempfung"     : (params_best_estimate_bounds["Staender-Daempfung"][0],
                                     params_best_estimate_bounds["Staender-Daempfung"][1]),      ## [N/(m*s)]
@@ -147,6 +166,10 @@ def main():
         mylogfile.write("new lower bounds:" + str(lower_bounds))
         mylogfile.write("new upper bounds:" + str(upper_bounds))
     x_ref = read_x_real_ref(x_ref_path)
+
+    n_gen = N_GEN
+    n_pop = round(N_POP)
+
     new_referenceDrive(FALL_17_VARS, lower_bounds, upper_bounds, eng, n_gen, n_pop, x_ref)
     eng.quit()
 
@@ -176,7 +199,7 @@ def new_referenceDrive(case, x_l, x_u, eng, n_gen, n_pop, x_ref_array):
                            termination=("n_gen", n_gen),
                            eliminate_duplicates=True,
                            verbose=True,
-                           save_history=False,
+                           save_history=True,
                            callback=my_callback)
             print('res: ', res)
             print("Best solution found: \nX = %s\nF = %s" % (res.X, res.F))
@@ -208,3 +231,4 @@ def read_x_real_ref(filename_case):
 
 if __name__=='__main__':
     main()
+

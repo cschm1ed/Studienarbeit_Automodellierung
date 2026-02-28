@@ -22,10 +22,10 @@ PARAM_NAMES_17 = ["Staender-Daempfung", "Staender-Steifigkeit", "Staender-Masse"
                    "Riemen-Steifigkeit", "Getriebe-Wirkungsgrad", "Getriebe-Uebersetzung",
                    "Leitspindel-Steigung", "Motor-Trägheitsmoment"]
 
-START_POS1 = 0.0047776
+START_POS1 = 19.995000000000001
 START_POS2 = START_POS1
-SIMULINK_MODEL_1 = "doppelsinus_7V"
-SIMULINK_MODEL_2 = "doppelsinus_17V"
+SIMULINK_MODEL_1 = "drift_corrected_doppelsinus_7V"
+SIMULINK_MODEL_2 = "drift_corrected_doppelsinus_17V"
 
 class MyProblem(Problem):
     # statischen Variablen die für die parallele Ausführung und die Vervendung von verschiedene Modelle benötigt werden.
@@ -72,13 +72,11 @@ class MyProblem(Problem):
                 xSim = MyProblem.engine.getxSim(MyProblem.engine.workspace['aut'], i + 1)
                 xSim = np.squeeze(np.array(xSim))
 
-                if np.all(np.abs(xSim) < 1):
-                    xSimS_fitness[i] = 1e12  # Penalty value for no movement
-
-                if xSim.shape == ref.shape:
-                    xSimS_fitness[i] = np.sum(abs(xSim - ref))
+                if np.all(np.abs(xSim - START_POS1) < 3):
+                    xSimS_fitness[i] = 1e5 * (1 / ((np.average(xSim - START_POS1)**2) + 1))
                 else:
-                    raise ValueError("Shape Mismatch")
+                    xSimS_fitness[i] = np.sum(abs(xSim - ref))
+
             except Exception:
                 # DIAGNOSTICS: If getxSim fails or shape is wrong
                 error_msg = MyProblem.engine.eval(f"aut({i + 1}).ErrorMessage")
