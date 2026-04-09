@@ -87,11 +87,15 @@ def daten_visualisieren():
 
 
 folders = [
-    r'.\Motoroffset\2026-01-31_13-00-21_motoroffset_bestimmen',
-    r'.\Motoroffset\2026-01-31_14-42-30',
-    r'.\Motoroffset\2026-01-31_14-48-46',
-    r'.\Motoroffset\2026-01-31_14-55-41',
-    r'.\Motoroffset\2026-01-31_15-04-14'
+    r'./jonas_fahrten/2026-04-08_16-33-31_konstantfahrt',
+    r'./jonas_fahrten/2026-04-08_17-00-46_richtungswechsel',
+    r'./jonas_fahrten/2026-04-08_17-02-29_PosenvariationRingdown',
+    r'./jonas_fahrten/2026-04-08_17-05-12_PosenvariationPRBS',
+    r'./jonas_fahrten/2026-04-08_17-08-29_PRBS',
+    r'./jonas_fahrten/2026-04-08_17-13-21_stopnhold',
+    r'./jonas_fahrten/2026-04-08_17-16-12_traegheitsfahrt',
+    r'./jonas_fahrten/2026-04-08_17-25-27_stopnhold_neu',
+    r'./jonas_fahrten/2026-04-08_17-31-41_kriechfahrt',
 ]
 #------------------Datenverarbeitung--------------------
 

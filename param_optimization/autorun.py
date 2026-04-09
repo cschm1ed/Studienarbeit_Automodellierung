@@ -6,13 +6,13 @@ import shutil
 from datetime import datetime
 
 
-for i in range(5):
+for i in range(20):
     # Execute another script and wait for completion
-    subprocess.run(["python", "myAPSO_Ansatz_A_xReal.py"], check=True)
+    subprocess.run(["python", "Ansatz_A_xReal_reducedModel.py"], check=True)
 
     # Create folder with timestamp
-    folder_name = datetime.now().strftime(f"%Y-%m-%d_%H_%M_optimization_run_{i}")
-    folder_name = os.path.join(os.getcwd(), "Datenaufbereitung", "ModbusMessung","ModbusMessung","2026-02-21_14-46-32_doppelsinus_A1_40_T_10", folder_name)
+    folder_name = datetime.now().strftime(f"%Y-%m-%d_%H_%M_optimization_reduced_modell_no_penalty_higher_mass{i}")
+    folder_name = os.path.join(os.getcwd(), "Datenaufbereitung", "ModbusMessung","ModbusMessung","2026-02-28_11-30-31_doppelsinus_75s", folder_name)
     os.makedirs(folder_name, exist_ok=True)
 
     # Move files to the new folder
@@ -22,3 +22,5 @@ for i in range(5):
             shutil.move(f, os.path.join(folder_name, f))
 
     print(f"Files moved to {folder_name}")
+
+os.system("shutdown now -h")

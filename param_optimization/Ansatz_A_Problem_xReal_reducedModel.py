@@ -9,13 +9,13 @@ import matlab.engine
 
 LOGGING = True
 FALL_7_VARS = 1
-FALL_17_VARS = 2
+FALL_11_VARS = 2
 
 PARAM_NAMES_7 = ["Gesamtmasse", "KGT-Trägheitsmoment", "Reibung-viskos",
                   "Getriebe-Wirkungsgrad", "Getriebe-Uebersetzung",
                   "Leitspindel-Steigung", "Motor-Trägheitsmoment"]
 
-PARAM_NAMES_17 = ["Staender-Daempfung", "Staender-Steifigkeit", "Staender-Masse",
+PARAM_NAMES_11 = ["Staender-Daempfung", "Staender-Steifigkeit", "Staender-Masse",
                    "Spindel-Daempfung", "Spindel-Steifigkeit", "Spindelgehaeuse-Masse",
                    "Spindel-Masse", "KGT-Daempfung", "KGT-Steifigkeit",
                    "KGT-Trägheitsmoment", "Reibung-viskos", "Riemen-Daempfung",
@@ -24,8 +24,8 @@ PARAM_NAMES_17 = ["Staender-Daempfung", "Staender-Steifigkeit", "Staender-Masse"
 
 START_POS1 = 20
 START_POS2 = START_POS1
-SIMULINK_MODEL_1 = "doopelsinus_75_s_1_7V_autocorell_timefit"
-SIMULINK_MODEL_2 = "doopelsinus_75_s_1_17V_autocorell_timefit"
+SIMULINK_MODEL_1 = "reduced_params_doopelsinus_75_s_1_7V_autocorell_timefit"
+SIMULINK_MODEL_2 = "reduced_params_doopelsinus_75_s_1_11V_autocorell_timefit"
 
 class MyProblem(Problem):
     # statischen Variablen die für die parallele Ausführung und die Vervendung von verschiedene Modelle benötigt werden.
@@ -53,7 +53,7 @@ class MyProblem(Problem):
         if self.__class__.static_case == FALL_7_VARS:
             MyProblem.engine.assignin('base', 'start_position', matlab.double(START_POS1), nargout=0)
             simulinkModell = SIMULINK_MODEL_1
-        elif self.__class__.static_case == FALL_17_VARS:
+        elif self.__class__.static_case == FALL_11_VARS:
             MyProblem.engine.assignin('base', 'start_position', matlab.double(START_POS2), nargout=0)
             simulinkModell = SIMULINK_MODEL_2
 
@@ -72,10 +72,10 @@ class MyProblem(Problem):
                 xSim = MyProblem.engine.getxSim(MyProblem.engine.workspace['aut'], i + 1)
                 xSim = np.squeeze(np.array(xSim))
 
-                if np.all(np.abs(xSim - START_POS1) < 1):
-                    xSimS_fitness[i] = 1e5 * (1 / ((np.average(xSim - START_POS1)**2) + 1))
-                else:
-                    xSimS_fitness[i] = np.sum(abs(xSim - ref))
+                #if np.all(np.abs(xSim - START_POS1) < 1):
+                #    xSimS_fitness[i] = 1e5 * (1 / ((np.average(xSim - START_POS1)**2) + 1))
+                #else:
+                xSimS_fitness[i] = np.sum(abs(xSim - ref))
 
             except Exception:
                 # DIAGNOSTICS: If getxSim fails or shape is wrong
@@ -136,7 +136,7 @@ class ProgressCallback(Callback):
                 if algorithm.n_gen == 1:
                     if self.case == FALL_7_VARS:
                         header = PARAM_NAMES_7 + ["Generation"]
-                    elif self.case == FALL_17_VARS:
-                        header = PARAM_NAMES_17 + ["Generation"]
+                    elif self.case == FALL_11_VARS:
+                        header = PARAM_NAMES_11 + ["Generation"]
                     csvWriter.writerow(header)
                 csvWriter.writerows(data_to_save)

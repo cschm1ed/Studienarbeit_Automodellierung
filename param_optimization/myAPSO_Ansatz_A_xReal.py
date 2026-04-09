@@ -14,11 +14,11 @@ import os
 from myAPSO_Ansatz_A_Problem_xReal import *
 import pandas as pd
 
-N_GEN = 75      #|
-N_POP = 60      #|
+N_GEN = 40      #|
+N_POP = 40      #|
 ITERATIONS = 1  # -> Parameter für APSO
 LOGGING = True # Wenn True LOGGING = True wird die historie aller Parameter in einer csv gespeichert
-x_ref_path = os.path.join("Datenaufbereitung", "ModbusMessung","ModbusMessung","2026-02-21_14-46-32_doppelsinus_A1_40_T_10", "position_sim.csv")
+x_ref_path = os.path.join("Datenaufbereitung", "ModbusMessung","ModbusMessung","2026-02-28_11-30-31_doppelsinus_75s", "position_sim.csv")
 
 ## Reihenfolge in dictionary ist relevant damit c1 - c17 iteriert werden kann
 ## Werte als (lower_bound, upper_bound) Tupel
@@ -45,28 +45,51 @@ x_ref_path = os.path.join("Datenaufbereitung", "ModbusMessung","ModbusMessung","
 params_best_estimate_bounds = {
     "Staender-Daempfung"     : (1e-4,    1e-1),      ## [N/(m*s)]
     "Staender-Steifigkeit"   : (1e3,     1e8),       ## [N/m]
-    "Staender-Masse"         : (1e-1,    1e3),       ## [kg]
-    "Spindel-Daempfung"      : (1e-6,    1),      ## [N/(m*s)]
+    "Staender-Masse"         : (1e-1,    1e2),       ## [kg]
+    "Spindel-Daempfung"      : (1e-3,    1),      ## [N/(m*s)]
     "Spindel-Steifigkeit"    : (1e3,     1e8),       ## [N/m]
-    "Spindelgehaeuse-Masse"  : (1e-4,    1e3),       ## [kg]
-    "Spindel-Masse"          : (1e-4,    1e3),       ## [kg]
-    "KGT-Daempfung"          : (1e-4,    1e-1),      ## [N/(m*s)]
+    "Spindelgehaeuse-Masse"  : (1e-4,    1e2),       ## [kg]
+    "Spindel-Masse"          : (1e-4,    1e2),       ## [kg]
+    "KGT-Daempfung"          : (1e-4,    1e-2),      ## [N/(m*s)]
     "KGT-Steifigkeit"        : (1e3,     1e8),       ## [N/m]
     "KGT-Trägheitsmoment"    : (8e-7,    1),      ## [kg*m²]
-    "Reibung-viskos"         : (8e-7,    1),      ## [N*m/(rad*s)]
-    "Riemen-Daempfung"       : (1e-7,    1),      ## [N*m/rad]
+    "Reibung-viskos"         : (1e-4,    1e-2),      ## [N*m/(rad*s)]
+    "Riemen-Daempfung"       : (1e-5,    1e-2),      ## [N*m/rad]
     "Riemen-Steifigkeit"     : (1e1,     1e8),       ## [N*m/rad]
-    "Getriebe-Wirkungsgrad"  : (0.80,    0.999),     ## [-]
-    "Getriebe-Uebersetzung"  : (0.1,     50),       ## [-]
-    "Leitspindel-Steigung"   : (0.001,   0.01),     ## [m]
-    "Motor-Trägheitsmoment"  : (8e-8,    1),      ## [kg*m²]
+    "Getriebe-Wirkungsgrad"  : (0.9,    0.999),     ## [-]
+    "Getriebe-Uebersetzung"  : (1,     2),       ## [-]
+    "Leitspindel-Steigung"   : (0.001,   0.005),     ## [m]
+    "Motor-Trägheitsmoment"  : (8e-6,    1e-2),      ## [kg*m²]
 }
+
+#params_best_estimate_bounds = {
+#    "Staender-Daempfung"     : (0.000153615,    0.009807008),      ## [N/(m*s)]
+#    "Staender-Steifigkeit"   : (244870.4316,     99884217.32),       ## [N/m]
+#    "Staender-Masse"         : (0.100030997,    65.45790921),       ## [kg]
+#    "Spindel-Daempfung"      : (0.000169647,    0.994978063),      ## [N/(m*s)]
+#    "Spindel-Steifigkeit"    : (3154.464291,     98977433.47),       ## [N/m]
+#    "Spindelgehaeuse-Masse"  : (0.0001035,    80.72972781),       ## [kg]
+#    "Spindel-Masse"          : (0.000107924,    50.13039503),       ## [kg]
+#    "KGT-Daempfung"          : (0.000534075,    0.009978786),      ## [N/(m*s)]
+#    "KGT-Steifigkeit"        : (13411.40058,     99475898.23),       ## [N/m]
+#    "KGT-Trägheitsmoment"    : (7.84676e-07,    0.1372324731),      ## [kg*m²]
+#    "Reibung-viskos"         : (1.0884e-06,    0.004008067),      ## [N*m/(rad*s)]
+#    "Riemen-Daempfung"       : (3.18342e-07,    0.0008392243),      ## [N*m/rad]
+#    "Riemen-Steifigkeit"     : (8974945.102,     99378554.84),       ## [N*m/rad]
+#    "Getriebe-Wirkungsgrad"  : (0.763905564,    0.999998567),     ## [-]
+#    "Getriebe-Uebersetzung"  : (0.835554265,     2.188370063),       ## [-]
+#    "Leitspindel-Steigung"   : (0.003218761,   0.005998721),     ## [m]
+#    "Motor-Trägheitsmoment"  : (6.40305e-06,    0.0036945),      ## [kg*m²]
+#}
 
 def main():
     #--------Speicherort der Simulink-Modelle-----------
     eng = matlab.engine.start_matlab()
     path = r"./matlab_path"   # Pfad für xAchse_Sim_GR_GA_17V.slx
     eng.addpath(path, nargout=0)
+    eng.addpath(os.path.join(path, "m_files"), nargout=0)
+    eng.addpath(os.path.join(path, "mat_files"), nargout=0)
+    eng.addpath(os.path.join(path, "simulink_models"), nargout=0)
 
     #-----Problem Variables-----
     n_gen = N_GEN      # Anzahl der Generationen
